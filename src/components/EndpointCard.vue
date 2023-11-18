@@ -47,10 +47,7 @@ function removeEndpoint() {
     </div>
     <EditEndpointDialogue
       v-model:open="isModalOpen"
-      :endpoint-address="address"
-      :endpoint-galaxy="(endpointJson.UniverseAddress.RealityIndex + 1).toString()"
-      :endpoint-name="endpointJson.Name"
-      :endpoint-type="endpointJson.TeleporterType"
+      :endpoint-data="endpointJson"
     />
   </div>
 </template>

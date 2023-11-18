@@ -37,11 +37,17 @@ export function createEndpoint(
 }
 
 export function endpointToAddress(endpoint: TeleportEndpoint) {
-  const  {VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = endpoint.UniverseAddress.GalacticAddress;
+  const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = endpoint.UniverseAddress.GalacticAddress;
   return xyzToAddress(VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex);
 }
 
-export function xyzToAddress(voxelX: number, voxelY: number, voxelZ: number, system_idx: number, planet_idx: number): string {
+export function xyzToAddress(
+  voxelX: number,
+  voxelY: number,
+  voxelZ: number,
+  system_idx: number,
+  planet_idx: number
+): string {
   let x_glyphs, y_glyphs, z_glyphs;
   if (voxelX < 0) {
     x_glyphs = voxelX + 4096;
@@ -78,6 +84,7 @@ export function addressToXYZ(input: string) {
   const y_glyphs = numberCoords[1];
   const z_glyphs = numberCoords[2]; // NoSonar this is stupid indexing
   const system_idx = numberCoords[3]; // NoSonar this is stupid indexing
+  const planet_idx = numberCoords[4]; // NoSonar this is stupid indexing
 
   let VoxelX, VoxelY, VoxelZ;
   if (x_glyphs > 2047) {
@@ -101,6 +108,7 @@ export function addressToXYZ(input: string) {
     VoxelY,
     VoxelZ,
     SolarSystemIndex: system_idx,
+    PlanetIndex: planet_idx,
   };
 }
 
@@ -109,8 +117,9 @@ function convertGlyphs(glyphs: string): string[] {
   const y_glyphs = glyphs.substring(4, 6);
   const z_glyphs = glyphs.substring(6, 9);
   const system_idx = glyphs.substring(1, 4);
+  const planet_idx = glyphs.substring(0, 1);
 
-  return [x_glyphs, y_glyphs, z_glyphs, system_idx];
+  return [x_glyphs, y_glyphs, z_glyphs, system_idx, planet_idx];
 }
 
 function convertCoords(coords: string): string[] {

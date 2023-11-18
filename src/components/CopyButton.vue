@@ -34,10 +34,6 @@ function copyJson() {
 </template>
 
 <style scoped lang="scss">
-button {
-  flex-grow: 1;
-}
-
 .no-interaction {
   pointer-events: none;
 }

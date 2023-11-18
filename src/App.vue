@@ -10,14 +10,16 @@ import { computed } from 'vue';
 import { endpointToAddress } from './common';
 
 const endpointData = useEndpointDataStore();
-const { json, filter } = storeToRefs(endpointData);
+const { json, filter, filterType } = storeToRefs(endpointData);
 
 const renderJson = computed(() => {
-  if (filter.value) {
+  if (filter.value || filterType.value) {
     return json.value.filter(
       (item) =>
-        item.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
-        endpointToAddress(item).includes(filter.value.toUpperCase())
+        (!filter.value ||
+          item.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
+          endpointToAddress(item).includes(filter.value.toUpperCase())) &&
+        (!filterType.value || item.TeleporterType === filterType.value)
     );
   } else {
     return json.value;
@@ -72,19 +74,15 @@ nav {
 
 .input-wrapper {
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
-
-  & > * {
-    flex-grow: 1;
-  }
+  flex-direction: column;
 
   .action-wrapper {
     display: flex;
-    flex-grow: 0;
+    flex-grow: 1;
     gap: 1rem;
     flex-wrap: wrap;
-    width: min-content;
+    align-items: end;
   }
 }
 </style>

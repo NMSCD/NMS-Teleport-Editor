@@ -1,10 +1,11 @@
-import type { TeleportEndpoint } from '@/types/teleportEndpoint';
+import type { TeleportEndpoint, TeleporterTypes } from '@/types/teleportEndpoint';
 import { defineStore } from 'pinia';
 
 interface State {
   jsonInputString: string;
   json: TeleportEndpoint[];
   filter: string;
+  filterType: TeleporterTypes | '';
 }
 
 export const useEndpointDataStore = defineStore('endpointData', {
@@ -12,6 +13,7 @@ export const useEndpointDataStore = defineStore('endpointData', {
     jsonInputString: '',
     json: [],
     filter: '',
+    filterType: '',
   }),
 
   actions: {

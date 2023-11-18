@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { useEndpointDataStore } from '@/stores/endpointData';
+import { teleporterTypesEnum } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
 
 const endpointData = useEndpointDataStore();
-const { filter } = storeToRefs(endpointData);
+const { filter, filterType } = storeToRefs(endpointData);
+
+const teleporterFilterTypes = {
+  '': '',
+  ...teleporterTypesEnum,
+};
 </script>
 
 <template>
@@ -19,6 +25,20 @@ const { filter } = storeToRefs(endpointData);
       id="filterInput"
       type="text"
     />
+  </div>
+  <div>
+    <label class="has-text-weight-bold">Filter Types</label>
+    <select
+      v-model="filterType"
+      class="select"
+    >
+      <option
+        v-for="teleporterType in teleporterFilterTypes"
+        :value="teleporterType"
+      >
+        {{ teleporterType }}
+      </option>
+    </select>
   </div>
 </template>
 

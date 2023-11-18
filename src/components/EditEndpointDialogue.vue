@@ -1,31 +1,25 @@
 <script setup lang="ts">
-import { addressToXYZ, createEndpoint } from '@/common';
+import { addressToXYZ, createEndpoint, endpointToAddress } from '@/common';
 import { useEndpointDataStore } from '@/stores/endpointData';
-import { teleporterTypesEnum, type TeleporterTypes } from '@/types/teleportEndpoint';
+import { teleporterTypesEnum, type TeleporterTypes, type TeleportEndpoint } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 interface Props {
   open: boolean;
-  endpointName?: string;
-  endpointAddress?: string;
-  endpointGalaxy?: string;
-  endpointType?: TeleporterTypes;
+  endpointData?: TeleportEndpoint;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   open: false,
-  endpointName: '',
-  endpointAddress: '',
-  endpointGalaxy: '',
-  endpointType: 'Base',
+  endpointData: () => createEndpoint(),
 });
 
 const dialog = ref<HTMLDialogElement | null>(null);
-const newEndpointName = ref(props.endpointName);
-const newEndpointAddress = ref(props.endpointAddress);
-const newEndpointGalaxy = ref(props.endpointGalaxy);
-const newEndpointType = ref<TeleporterTypes>(props.endpointType);
+const newEndpointName = ref<string>(props.endpointData.Name);
+const newEndpointAddress = ref<string>(endpointToAddress(props.endpointData));
+const newEndpointGalaxy = ref<string>((props.endpointData.UniverseAddress.RealityIndex + 1).toString());
+const newEndpointType = ref<TeleporterTypes>(props.endpointData.TeleporterType);
 
 const endpointData = useEndpointDataStore();
 const { json } = storeToRefs(endpointData);
@@ -45,10 +39,10 @@ function closeModal() {
 }
 
 function cancelEndpointAdd() {
-  newEndpointName.value = '';
-  newEndpointAddress.value = '';
-  newEndpointGalaxy.value = '';
-  newEndpointType.value = 'Base';
+  newEndpointName.value = props.endpointData.Name;
+  newEndpointAddress.value = endpointToAddress(props.endpointData);
+  newEndpointGalaxy.value = (props.endpointData.UniverseAddress.RealityIndex + 1).toString();
+  newEndpointType.value = props.endpointData.TeleporterType;
 }
 
 function addEndpoint() {
@@ -57,7 +51,7 @@ function addEndpoint() {
   const coordinateData = addressToXYZ(newEndpointAddress.value);
   const galaxyNumber = parseInt(newEndpointGalaxy.value);
   if (!coordinateData || isNaN(galaxyNumber) || galaxyNumber < minGalaxy || galaxyNumber > maxGalaxy) return;
-  const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex } = coordinateData;
+  const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = coordinateData;
 
   const endpoint = createEndpoint(
     newEndpointName.value,
@@ -65,10 +59,27 @@ function addEndpoint() {
     VoxelX,
     VoxelY,
     VoxelZ,
+    galaxyNumber - 1,
     SolarSystemIndex,
-    galaxyNumber
+    PlanetIndex
   );
-  json.value.unshift(endpoint);
+
+  if (props.endpointData.Name) {
+    const locationData = addressToXYZ(newEndpointAddress.value);
+    if (!locationData) return;
+    const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = locationData;
+    const GalacticAddressData = props.endpointData.UniverseAddress.GalacticAddress;
+    props.endpointData.Name = newEndpointName.value;
+    GalacticAddressData.PlanetIndex = PlanetIndex;
+    GalacticAddressData.SolarSystemIndex = SolarSystemIndex;
+    GalacticAddressData.VoxelX = VoxelX;
+    GalacticAddressData.VoxelY = VoxelY;
+    GalacticAddressData.VoxelZ = VoxelZ;
+    props.endpointData.UniverseAddress.RealityIndex = parseInt(newEndpointGalaxy.value) - 1;
+    props.endpointData.TeleporterType = newEndpointType.value;
+  } else {
+    json.value.unshift(endpoint);
+  }
   cancelEndpointAdd();
 }
 
@@ -78,6 +89,8 @@ const ids = {
   addressInput: 'addressInput' + uniqueIdAddition,
   galaxyInput: 'galaxyInput' + uniqueIdAddition,
 };
+
+const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' : 'Add Endpoint'));
 </script>
 
 <template>
@@ -90,7 +103,7 @@ const ids = {
     <div class="p-4 dialog-content">
       <form
         class="mb-4 endpoint-add-form"
-        @submit.prevent
+        @submit.prevent="addEndpoint"
       >
         <label :for="ids.nameInput">Name:</label>
         <input
@@ -109,6 +122,7 @@ const ids = {
           maxlength="19"
         />
         <label :for="ids.galaxyInput">Galaxy:</label>
+
         <input
           v-model="newEndpointGalaxy"
           class="input"
@@ -138,7 +152,7 @@ const ids = {
           class="button is-success"
           @click="addEndpoint"
         >
-          Add Endpoint
+          {{ editButtonText }}
         </button>
         <button
           class="button is-danger"
