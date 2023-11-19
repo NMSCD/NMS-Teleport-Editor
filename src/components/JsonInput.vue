@@ -3,7 +3,7 @@ import { useEndpointDataStore } from '@/stores/endpointData';
 import { storeToRefs } from 'pinia';
 
 const endpointData = useEndpointDataStore();
-const { jsonInputString } = storeToRefs(endpointData);
+const { jsonInputString, jsonError } = storeToRefs(endpointData);
 </script>
 
 <template>
@@ -19,6 +19,12 @@ const { jsonInputString } = storeToRefs(endpointData);
       id="jsonInput"
       @input="endpointData.parseJson"
     ></textarea>
+    <p
+      v-if="jsonError"
+      class="error mt-1 p-1"
+    >
+      Malformed JSON detected. The app will not work.
+    </p>
   </div>
 </template>
 
@@ -26,5 +32,11 @@ const { jsonInputString } = storeToRefs(endpointData);
 label {
   margin-block-end: 3px;
   display: block;
+}
+
+.error {
+  background-color: red;
+  color: white;
+  border-radius: 4px;
 }
 </style>
