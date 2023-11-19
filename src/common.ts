@@ -2,6 +2,8 @@ import type { TeleportEndpoint, TeleporterTypes } from './types/teleportEndpoint
 
 type Pos = [number, number, number];
 
+const randomNumber = Math.random();
+
 export function createEndpoint(
   name: string = '',
   teleporterType: TeleporterTypes = 'Spacestation',
@@ -11,8 +13,8 @@ export function createEndpoint(
   galaxy: number = 0,
   systemIndex: number = 0,
   planet: number = 0,
-  position: Pos = [0, 0, 0],
-  facing: Pos = [0, 0, 0],
+  position: Pos = [randomNumber, randomNumber, randomNumber],
+  facing: Pos = [randomNumber, randomNumber, randomNumber],
   isFeatured: boolean = false,
   calcWarpOffset: boolean = false
 ): TeleportEndpoint {
