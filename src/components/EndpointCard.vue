@@ -26,8 +26,8 @@ function removeEndpoint() {
 </script>
 
 <template>
-  <div class="endpoint-card">
-    <div>{{ endpointJson.Name }}</div>
+  <div class="box">
+    <div class="has-text-weight-bold">{{ endpointJson.Name }}</div>
     <div class="glyphs">{{ address }}</div>
     <div>Galaxy: {{ endpointJson.UniverseAddress.RealityIndex + 1 }}</div>
     <div>{{ endpointJson.TeleporterType }}</div>
@@ -53,13 +53,6 @@ function removeEndpoint() {
 </template>
 
 <style scoped lang="scss">
-.endpoint-card {
-  background-color: #eee;
-  border: 1px solid silver;
-  padding: 0.5rem;
-  border-radius: 7px;
-}
-
 .actions {
   display: flex;
   gap: 0.5rem;

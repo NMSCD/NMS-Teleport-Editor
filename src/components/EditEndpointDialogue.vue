@@ -91,11 +91,20 @@ const ids = {
 };
 
 const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' : 'Add Endpoint'));
+
+const isOutOfSafeRange = computed(() => {
+  const systemIndex = newEndpointAddress.value.substring(1, 4);
+  const systemNumber = parseInt(systemIndex, 16);
+  const lastSafeIndex = 122;
+  const aboveSafeRange = systemNumber > lastSafeIndex;
+  return aboveSafeRange && endpointToAddress(props.endpointData) !== newEndpointAddress.value;
+});
 </script>
 
 <template>
   <dialog
-    class="p-0"
+    :class="{ 'dialog-hide': !open }"
+    class="box p-0 m-auto"
     ref="dialog"
     @click.self="closeModal"
     @close="$emit('update:open', false)"
@@ -114,15 +123,22 @@ const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' 
           autofocus
         />
         <label :for="ids.addressInput">Address:</label>
-        <input
-          v-model="newEndpointAddress"
-          class="input"
-          type="text"
-          :id="ids.addressInput"
-          maxlength="19"
-        />
+        <div>
+          <input
+            v-model="newEndpointAddress"
+            class="input"
+            type="text"
+            :id="ids.addressInput"
+            maxlength="19"
+          />
+          <p
+            v-if="isOutOfSafeRange"
+            class="warning mt-1 p-1"
+          >
+            Warning: This system may<br />not have a space station.
+          </p>
+        </div>
         <label :for="ids.galaxyInput">Galaxy:</label>
-
         <input
           v-model="newEndpointGalaxy"
           class="input"
@@ -166,15 +182,28 @@ const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' 
 </template>
 
 <style scoped lang="scss">
-.submit-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
+dialog {
+  border: 1px solid silver;
 
-.endpoint-add-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  .warning {
+    background-color: orange;
+    border-radius: 4px;
+  }
+
+  &.dialog-hide {
+    display: none;
+  }
+
+  .submit-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .endpoint-add-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
 }
 </style>

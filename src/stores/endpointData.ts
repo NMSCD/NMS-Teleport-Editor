@@ -6,6 +6,7 @@ interface State {
   json: TeleportEndpoint[];
   filter: string;
   filterType: TeleporterTypes | '';
+  jsonError: boolean;
 }
 
 export const useEndpointDataStore = defineStore('endpointData', {
@@ -14,11 +15,18 @@ export const useEndpointDataStore = defineStore('endpointData', {
     json: [],
     filter: '',
     filterType: '',
+    jsonError: false,
   }),
 
   actions: {
     parseJson() {
-      this.json = JSON.parse(this.jsonInputString || '[]');
+      try {
+        this.json = JSON.parse(this.jsonInputString || '[]');
+        this.jsonError = false;
+      } catch (error) {
+        console.error(error);
+        this.jsonError = true;
+      }
     },
   },
 });
