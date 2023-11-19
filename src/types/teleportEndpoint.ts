@@ -1,4 +1,4 @@
-const teleporterTypesEnum = {
+export const teleporterTypesEnum = {
   Base: 'Base',
   Spacestation: 'Spacestation',
   Atlas: 'Atlas',
@@ -6,7 +6,7 @@ const teleporterTypesEnum = {
   ExternalBase: 'ExternalBase',
   EmergencyGalaxyFix: 'EmergencyGalaxyFix',
   OnNexus: 'OnNexus',
-  SpaceStationFixPosition: 'SpaceStationFixPosition',
+  SpacestationFixPosition: 'SpacestationFixPosition',
   Settlement: 'Settlement',
   Freighter: 'Freighter',
   Frigate: 'Frigate',
@@ -14,7 +14,7 @@ const teleporterTypesEnum = {
 
 type ObjectValues<T> = T[keyof T];
 
-type TeleporterTypes = ObjectValues<typeof teleporterTypesEnum>;
+export type TeleporterTypes = ObjectValues<typeof teleporterTypesEnum>;
 
 export interface TeleportEndpoint {
   UniverseAddress: {

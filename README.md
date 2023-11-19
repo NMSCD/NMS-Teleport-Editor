@@ -1,2 +1,2 @@
 # NMS-Teleport-Editor
-Allows you to edit multiple destinations into your teleporter list
+Allows you to edit your teleporter list
