@@ -122,7 +122,7 @@ const isOutOfSafeRange = computed(() => {
           :id="ids.nameInput"
           autofocus
         />
-        <label :for="ids.addressInput">Address:</label>
+        <label :for="ids.addressInput">Address (Glyphs or Coordinates):</label>
         <div>
           <input
             v-model="newEndpointAddress"
@@ -138,7 +138,7 @@ const isOutOfSafeRange = computed(() => {
             Warning: This system may<br />not have a space station.
           </p>
         </div>
-        <label :for="ids.galaxyInput">Galaxy:</label>
+        <label :for="ids.galaxyInput">Galaxy (1-256):</label>
         <input
           v-model="newEndpointGalaxy"
           class="input"
