@@ -63,4 +63,8 @@ function removeEndpoint() {
   font-size: 1.75rem;
   line-height: 1.2rem;
 }
+
+.box {
+  margin: 0;
+}
 </style>
