@@ -1,46 +1,26 @@
 <script setup lang="ts">
 import { addressToXYZ, createEndpoint, endpointToGlyphs } from '@/common';
+import { useId } from '@/helpers/id';
 import { useEndpointDataStore } from '@/store/endpointData';
-import { teleporterTypesEnum, type TeleporterTypes, type TeleportEndpoint } from '@/types/teleportEndpoint';
+import type { DialogProps } from '@/types/props';
+import { teleporterTypesEnum, type TeleporterTypes } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 
-interface Props {
-  open: boolean;
-  endpointData?: TeleportEndpoint;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DialogProps>(), {
   open: false,
   endpointData: () => createEndpoint(),
 });
 
-const dialog = ref<HTMLDialogElement | null>(null);
+const endpointData = useEndpointDataStore();
+const { json } = storeToRefs(endpointData);
+
 const newEndpointName = ref<string>(props.endpointData.Name);
 const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
 const newEndpointGalaxy = ref<string>((props.endpointData.UniverseAddress.RealityIndex + 1).toString());
 const newEndpointType = ref<TeleporterTypes>(props.endpointData.TeleporterType);
 
-const endpointData = useEndpointDataStore();
-const { json } = storeToRefs(endpointData);
-
-defineEmits<{
-  'update:open': [isOpen: boolean];
-}>();
-
-watchEffect(() => {
-  if (props.open) openModal();
-});
-
-function openModal() {
-  dialog.value?.showModal();
-}
-
-function closeModal() {
-  dialog.value?.close();
-}
-
-function cancelEndpointAdd() {
+function resetEndpointInputs() {
   newEndpointName.value = props.endpointData.Name;
   newEndpointAddress.value = endpointToGlyphs(props.endpointData);
   newEndpointGalaxy.value = (props.endpointData.UniverseAddress.RealityIndex + 1).toString();
@@ -82,14 +62,16 @@ function addEndpoint() {
   } else {
     json.value.unshift(endpoint);
   }
-  cancelEndpointAdd();
+
+  // reset to initial state
+  resetEndpointInputs();
 }
 
-const uniqueIdAddition = Math.random() + Math.random();
+const uniqueId = useId();
 const ids = {
-  nameInput: 'nameInput' + uniqueIdAddition,
-  addressInput: 'addressInput' + uniqueIdAddition,
-  galaxyInput: 'galaxyInput' + uniqueIdAddition,
+  nameInput: 'nameInput' + uniqueId,
+  addressInput: 'addressInput' + uniqueId,
+  galaxyInput: 'galaxyInput' + uniqueId,
 };
 
 const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' : 'Add Endpoint'));
@@ -104,111 +86,95 @@ const isOutOfSafeRange = computed(() => {
 </script>
 
 <template>
-  <dialog
-    :class="{ 'dialog-hide': !open }"
-    class="box p-0 m-auto"
-    ref="dialog"
-    @click.self="closeModal"
-    @close="$emit('update:open', false)"
-  >
-    <div class="p-4 dialog-content">
-      <form
-        class="mb-4 endpoint-add-form"
-        @submit.prevent="addEndpoint"
-      >
-        <label :for="ids.nameInput">Name:</label>
+  <div class="p-4">
+    <form
+      class="mb-4 endpoint-add-form"
+      @submit.prevent="addEndpoint"
+    >
+      <label :for="ids.nameInput">Name:</label>
+      <input
+        v-model="newEndpointName"
+        :id="ids.nameInput"
+        class="input"
+        type="text"
+        autofocus
+      />
+      <label :for="ids.addressInput">Address (Glyphs or Coordinates):</label>
+      <div>
         <input
-          v-model="newEndpointName"
-          :id="ids.nameInput"
+          v-model="newEndpointAddress"
+          :id="ids.addressInput"
           class="input"
           type="text"
-          autofocus
+          maxlength="19"
         />
-        <label :for="ids.addressInput">Address (Glyphs or Coordinates):</label>
-        <div>
-          <input
-            v-model="newEndpointAddress"
-            :id="ids.addressInput"
-            class="input"
-            type="text"
-            maxlength="19"
-          />
-          <p
-            v-if="isOutOfSafeRange"
-            class="warning mt-1 p-1"
-          >
-            Warning: This system may not have a space station.
-          </p>
-        </div>
-        <label :for="ids.galaxyInput">Galaxy (1-256):</label>
-        <input
-          v-model="newEndpointGalaxy"
-          :id="ids.galaxyInput"
-          class="input"
-          maxlength="3"
-          type="text"
-        />
-        <label>Type:</label>
-        <select
-          v-model="newEndpointType"
-          class="select"
+        <p
+          v-if="isOutOfSafeRange"
+          class="warning mt-1 p-1"
         >
-          <option
-            v-for="endpointType in teleporterTypesEnum"
-            :value="endpointType"
-          >
-            {{ endpointType }}
-          </option>
-        </select>
-      </form>
+          Warning: This system may not have a space station.
+        </p>
+      </div>
+      <label :for="ids.galaxyInput">Galaxy (1-256):</label>
+      <input
+        v-model="newEndpointGalaxy"
+        :id="ids.galaxyInput"
+        class="input"
+        maxlength="3"
+        type="text"
+      />
+      <label>Type:</label>
+      <select
+        v-model="newEndpointType"
+        class="select"
+      >
+        <option
+          v-for="endpointType in teleporterTypesEnum"
+          :value="endpointType"
+        >
+          {{ endpointType }}
+        </option>
+      </select>
+    </form>
 
-      <form
-        class="submit-buttons"
-        method="dialog"
+    <form
+      class="submit-buttons"
+      method="dialog"
+    >
+      <button
+        class="button is-success"
+        @click="addEndpoint"
       >
-        <button
-          class="button is-success"
-          @click="addEndpoint"
-        >
-          {{ editButtonText }}
-        </button>
-        <button
-          class="button is-danger"
-          @click="cancelEndpointAdd"
-        >
-          Cancel
-        </button>
-      </form>
-    </div>
-  </dialog>
+        {{ editButtonText }}
+      </button>
+      <button
+        class="button is-danger"
+        @click="resetEndpointInputs"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
 </template>
 
 <style scoped>
-dialog {
-  border: 1px solid silver;
-  max-width: 510px;
+.warning {
+  background-color: orange;
+  color: black;
+  border-radius: 4px;
+  text-wrap: balance;
+}
 
-  .warning {
-    background-color: orange;
-    color: black;
-    border-radius: 4px;
-    text-wrap: balance;
-  }
+.submit-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
 
-  &.dialog-hide {
-    display: none;
-  }
-
-  .submit-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-  }
-
-  .endpoint-add-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
+.endpoint-add-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 1rem;
 }
 </style>

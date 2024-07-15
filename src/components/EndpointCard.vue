@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import EditEndpointDialogue from './EditEndpointDialogue.vue';
 import { endpointToGlyphs } from '@/common';
 import { useEndpointDataStore } from '@/store/endpointData';
 import { type TeleportEndpoint } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import EditDialogueButton from './EditDialogueButton.vue';
 
 const props = defineProps<{
   endpointJson: TeleportEndpoint;
@@ -12,8 +12,6 @@ const props = defineProps<{
 
 const endpointData = useEndpointDataStore();
 const { json } = storeToRefs(endpointData);
-
-const isModalOpen = ref(false);
 
 const address = computed(() => endpointToGlyphs(props.endpointJson));
 
@@ -29,12 +27,10 @@ function removeEndpoint() {
     <div>Galaxy: {{ endpointJson.UniverseAddress.RealityIndex + 1 }}</div>
     <div>{{ endpointJson.TeleporterType }}</div>
     <div class="actions mt-2">
-      <button
-        class="button"
-        @click="isModalOpen = true"
-      >
-        Edit
-      </button>
+      <EditDialogueButton
+        :endpoint-data="endpointJson"
+        label="Edit"
+      />
       <button
         class="button is-danger"
         @click="removeEndpoint"
@@ -42,10 +38,6 @@ function removeEndpoint() {
         Delete
       </button>
     </div>
-    <EditEndpointDialogue
-      v-model:open="isModalOpen"
-      :endpoint-data="endpointJson"
-    />
   </div>
 </template>
 

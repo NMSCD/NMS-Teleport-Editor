@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import JsonInput from './components/JsonInput.vue';
 import EndpointCard from './components/EndpointCard.vue';
-import AddEndpoint from './components/AddEndpoint.vue';
+import EditDialogueButton from './components/EditDialogueButton.vue';
 import FilterInput from './components/FilterInput.vue';
 import CopyButton from './components/CopyButton.vue';
 import { useEndpointDataStore } from './store/endpointData';
@@ -44,7 +44,7 @@ const renderJson = computed(() => {
       <JsonInput />
       <div class="action-wrapper">
         <FilterInput />
-        <AddEndpoint />
+        <EditDialogueButton label="Add Teleport Endpoint" />
         <CopyButton />
       </div>
     </div>
