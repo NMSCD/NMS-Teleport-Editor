@@ -4,10 +4,10 @@ import EndpointCard from './components/EndpointCard.vue';
 import AddEndpoint from './components/AddEndpoint.vue';
 import FilterInput from './components/FilterInput.vue';
 import CopyButton from './components/CopyButton.vue';
-import { useEndpointDataStore } from './stores/endpointData';
+import { useEndpointDataStore } from './store/endpointData';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { endpointToAddress } from './common';
+import { endpointToGlyphs } from './common';
 
 const endpointData = useEndpointDataStore();
 const { json, filter, filterType } = storeToRefs(endpointData);
@@ -18,7 +18,7 @@ const renderJson = computed(() => {
       (item) =>
         (!filter.value ||
           item.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
-          endpointToAddress(item).includes(filter.value.toUpperCase())) &&
+          endpointToGlyphs(item).includes(filter.value.toUpperCase())) &&
         (!filterType.value || item.TeleporterType === filterType.value)
     );
   } else {
@@ -59,7 +59,7 @@ const renderJson = computed(() => {
   </main>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 nav {
   display: flex;
   flex-wrap: wrap;

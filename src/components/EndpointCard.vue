@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import EditEndpointDialogue from './EditEndpointDialogue.vue';
-import { xyzToAddress } from '@/common';
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { endpointToGlyphs } from '@/common';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { type TeleportEndpoint } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
@@ -15,10 +15,7 @@ const { json } = storeToRefs(endpointData);
 
 const isModalOpen = ref(false);
 
-const address = computed(() => {
-  const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = props.endpointJson.UniverseAddress.GalacticAddress;
-  return xyzToAddress(VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex);
-});
+const address = computed(() => endpointToGlyphs(props.endpointJson));
 
 function removeEndpoint() {
   json.value = json.value.filter((t) => t !== props.endpointJson);
@@ -52,7 +49,7 @@ function removeEndpoint() {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .actions {
   display: flex;
   gap: 0.5rem;

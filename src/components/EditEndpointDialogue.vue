@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { addressToXYZ, createEndpoint, endpointToAddress } from '@/common';
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { addressToXYZ, createEndpoint, endpointToGlyphs } from '@/common';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { teleporterTypesEnum, type TeleporterTypes, type TeleportEndpoint } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watchEffect } from 'vue';
@@ -17,14 +17,16 @@ const props = withDefaults(defineProps<Props>(), {
 
 const dialog = ref<HTMLDialogElement | null>(null);
 const newEndpointName = ref<string>(props.endpointData.Name);
-const newEndpointAddress = ref<string>(endpointToAddress(props.endpointData));
+const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
 const newEndpointGalaxy = ref<string>((props.endpointData.UniverseAddress.RealityIndex + 1).toString());
 const newEndpointType = ref<TeleporterTypes>(props.endpointData.TeleporterType);
 
 const endpointData = useEndpointDataStore();
 const { json } = storeToRefs(endpointData);
 
-defineEmits(['update:open']);
+defineEmits<{
+  'update:open': [isOpen: boolean];
+}>();
 
 watchEffect(() => {
   if (props.open) openModal();
@@ -40,7 +42,7 @@ function closeModal() {
 
 function cancelEndpointAdd() {
   newEndpointName.value = props.endpointData.Name;
-  newEndpointAddress.value = endpointToAddress(props.endpointData);
+  newEndpointAddress.value = endpointToGlyphs(props.endpointData);
   newEndpointGalaxy.value = (props.endpointData.UniverseAddress.RealityIndex + 1).toString();
   newEndpointType.value = props.endpointData.TeleporterType;
 }
@@ -53,16 +55,16 @@ function addEndpoint() {
   if (!coordinateData || isNaN(galaxyNumber) || galaxyNumber < minGalaxy || galaxyNumber > maxGalaxy) return;
   const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = coordinateData;
 
-  const endpoint = createEndpoint(
-    newEndpointName.value,
-    newEndpointType.value,
-    VoxelX,
-    VoxelY,
-    VoxelZ,
-    galaxyNumber - 1,
-    SolarSystemIndex,
-    PlanetIndex
-  );
+  const endpoint = createEndpoint({
+    name: newEndpointName.value,
+    teleporterType: newEndpointType.value,
+    x: VoxelX,
+    y: VoxelY,
+    z: VoxelZ,
+    galaxy: galaxyNumber - 1,
+    systemIndex: SolarSystemIndex,
+    planet: PlanetIndex,
+  });
 
   if (props.endpointData.Name) {
     const locationData = addressToXYZ(newEndpointAddress.value);
@@ -97,7 +99,7 @@ const isOutOfSafeRange = computed(() => {
   const systemNumber = parseInt(systemIndex, 16);
   const lastSafeIndex = 122;
   const aboveSafeRange = systemNumber > lastSafeIndex;
-  return aboveSafeRange && endpointToAddress(props.endpointData) !== newEndpointAddress.value;
+  return aboveSafeRange && endpointToGlyphs(props.endpointData) !== newEndpointAddress.value;
 });
 </script>
 
@@ -117,34 +119,34 @@ const isOutOfSafeRange = computed(() => {
         <label :for="ids.nameInput">Name:</label>
         <input
           v-model="newEndpointName"
+          :id="ids.nameInput"
           class="input"
           type="text"
-          :id="ids.nameInput"
           autofocus
         />
         <label :for="ids.addressInput">Address (Glyphs or Coordinates):</label>
         <div>
           <input
             v-model="newEndpointAddress"
+            :id="ids.addressInput"
             class="input"
             type="text"
-            :id="ids.addressInput"
             maxlength="19"
           />
           <p
             v-if="isOutOfSafeRange"
             class="warning mt-1 p-1"
           >
-            Warning: This system may<br />not have a space station.
+            Warning: This system may not have a space station.
           </p>
         </div>
         <label :for="ids.galaxyInput">Galaxy (1-256):</label>
         <input
           v-model="newEndpointGalaxy"
-          class="input"
-          type="text"
           :id="ids.galaxyInput"
+          class="input"
           maxlength="3"
+          type="text"
         />
         <label>Type:</label>
         <select
@@ -181,13 +183,16 @@ const isOutOfSafeRange = computed(() => {
   </dialog>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 dialog {
   border: 1px solid silver;
+  max-width: 510px;
 
   .warning {
     background-color: orange;
+    color: black;
     border-radius: 4px;
+    text-wrap: balance;
   }
 
   &.dialog-hide {
