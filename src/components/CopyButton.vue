@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
@@ -25,15 +25,15 @@ function copyJson() {
 
 <template>
   <button
-    :class="{ 'no-interaction': copied }"
-    class="button is-success is-outlined"
+    :class="{ 'no-interaction': copied, 'is-outlined': !copied }"
+    class="button is-success"
     @click="copyJson"
   >
     {{ buttonText }}
   </button>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .no-interaction {
   pointer-events: none;
 }

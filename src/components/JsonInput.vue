@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { storeToRefs } from 'pinia';
 
 const endpointData = useEndpointDataStore();
@@ -28,7 +28,7 @@ const { jsonInputString, jsonError } = storeToRefs(endpointData);
   </div>
 </template>
 
-<style scoped label="scss">
+<style scoped>
 label {
   margin-block-end: 3px;
   display: block;

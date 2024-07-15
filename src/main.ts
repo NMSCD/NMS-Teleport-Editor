@@ -1,5 +1,5 @@
 import 'bulma';
-import './scss/style.scss';
+import './style/style.css';
 
 import App from './App.vue';
 import { createApp } from 'vue';

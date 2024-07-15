@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import EditEndpointDialogue from './EditEndpointDialogue.vue';
-import { xyzToAddress } from '@/common';
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { endpointToGlyphs } from '@/common';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { type TeleportEndpoint } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import EditDialogueButton from './EditDialogueButton.vue';
 
 const props = defineProps<{
   endpointJson: TeleportEndpoint;
@@ -13,12 +13,7 @@ const props = defineProps<{
 const endpointData = useEndpointDataStore();
 const { json } = storeToRefs(endpointData);
 
-const isModalOpen = ref(false);
-
-const address = computed(() => {
-  const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = props.endpointJson.UniverseAddress.GalacticAddress;
-  return xyzToAddress(VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex);
-});
+const address = computed(() => endpointToGlyphs(props.endpointJson));
 
 function removeEndpoint() {
   json.value = json.value.filter((t) => t !== props.endpointJson);
@@ -26,18 +21,16 @@ function removeEndpoint() {
 </script>
 
 <template>
-  <div class="box">
+  <div class="box mb-5">
     <div class="has-text-weight-bold">{{ endpointJson.Name }}</div>
     <div class="glyphs">{{ address }}</div>
     <div>Galaxy: {{ endpointJson.UniverseAddress.RealityIndex + 1 }}</div>
     <div>{{ endpointJson.TeleporterType }}</div>
     <div class="actions mt-2">
-      <button
-        class="button"
-        @click="isModalOpen = true"
-      >
-        Edit
-      </button>
+      <EditDialogueButton
+        :endpoint-data="endpointJson"
+        label="Edit"
+      />
       <button
         class="button is-danger"
         @click="removeEndpoint"
@@ -45,14 +38,10 @@ function removeEndpoint() {
         Delete
       </button>
     </div>
-    <EditEndpointDialogue
-      v-model:open="isModalOpen"
-      :endpoint-data="endpointJson"
-    />
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .actions {
   display: flex;
   gap: 0.5rem;

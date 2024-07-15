@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/stores/endpointData';
+import { useEndpointDataStore } from '@/store/endpointData';
 import { teleporterTypesEnum } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
+import FilterInputWrapper from './FilterInputWrapper.vue';
 
 const endpointData = useEndpointDataStore();
 const { filter, filterType } = storeToRefs(endpointData);
 
+// what the actual fuck is this, please explain what the hell this empty string property is
 const teleporterFilterTypes = {
   '': '',
   ...teleporterTypesEnum,
@@ -13,7 +15,7 @@ const teleporterFilterTypes = {
 </script>
 
 <template>
-  <div>
+  <FilterInputWrapper>
     <label
       class="has-text-weight-bold"
       for="filterInput"
@@ -25,8 +27,8 @@ const teleporterFilterTypes = {
       id="filterInput"
       type="text"
     />
-  </div>
-  <div>
+  </FilterInputWrapper>
+  <FilterInputWrapper>
     <label class="has-text-weight-bold">Filter Types</label>
     <select
       v-model="filterType"
@@ -39,12 +41,5 @@ const teleporterFilterTypes = {
         {{ teleporterType }}
       </option>
     </select>
-  </div>
+  </FilterInputWrapper>
 </template>
-
-<style scoped lang="scss">
-label {
-  display: block;
-  margin-block-end: 3px;
-}
-</style>

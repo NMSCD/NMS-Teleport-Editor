@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'NMS-Glyphs-Mono';
+  src:
+    local('NMS-Glyphs-Mono'),
+    url('/NMS-Glyphs-Mono.ttf') format('truetype');
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+@media only screen and (max-width: 1023px) {
+  .container {
+    margin: 0 1em;
+  }
+}
+
+.button:not(.is-outlined) {
+  &.is-danger,
+  &.is-success {
+    color: white;
+  }
+}
