@@ -26,7 +26,7 @@ function removeEndpoint() {
 </script>
 
 <template>
-  <div class="box">
+  <div class="box mb-5">
     <div class="has-text-weight-bold">{{ endpointJson.Name }}</div>
     <div class="glyphs">{{ address }}</div>
     <div>Galaxy: {{ endpointJson.UniverseAddress.RealityIndex + 1 }}</div>
@@ -62,9 +62,5 @@ function removeEndpoint() {
   font-family: NMS-Glyphs-Mono;
   font-size: 1.75rem;
   line-height: 1.2rem;
-}
-
-.box {
-  margin: 0;
 }
 </style>
