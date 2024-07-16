@@ -124,17 +124,16 @@ const isOutOfSafeRange = computed(() => {
         type="text"
       />
       <label>Type:</label>
-      <select
-        v-model="newEndpointType"
-        class="select"
-      >
-        <option
-          v-for="endpointType in teleporterTypesEnum"
-          :value="endpointType"
-        >
-          {{ endpointType }}
-        </option>
-      </select>
+      <div class="select">
+        <select v-model="newEndpointType">
+          <option
+            v-for="endpointType in teleporterTypesEnum"
+            :value="endpointType"
+          >
+            {{ endpointType }}
+          </option>
+        </select>
+      </div>
     </form>
 
     <form

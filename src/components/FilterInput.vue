@@ -30,16 +30,15 @@ const teleporterFilterTypes = {
   </FilterInputWrapper>
   <FilterInputWrapper>
     <label class="has-text-weight-bold">Filter Types</label>
-    <select
-      v-model="filterType"
-      class="select"
-    >
-      <option
-        v-for="teleporterType in teleporterFilterTypes"
-        :value="teleporterType"
-      >
-        {{ teleporterType }}
-      </option>
-    </select>
+    <div class="select">
+      <select v-model="filterType">
+        <option
+          v-for="teleporterType in teleporterFilterTypes"
+          :value="teleporterType"
+        >
+          {{ teleporterType }}
+        </option>
+      </select>
+    </div>
   </FilterInputWrapper>
 </template>
