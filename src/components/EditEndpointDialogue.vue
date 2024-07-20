@@ -6,7 +6,7 @@ import type { DialogProps } from '@/types/props';
 import { teleporterTypes, type TeleporterTypes } from '@/types/teleportEndpoint';
 import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<DialogProps>(), {
   endpointData: () => createEndpoint(),
@@ -29,7 +29,7 @@ function resetEndpointInputs() {
   newEndpointName.value = props.endpointData.Name;
   newEndpointAddress.value = endpointToGlyphs(props.endpointData);
   newEndpointGalaxy.value = (props.endpointData.UniverseAddress.RealityIndex + 1).toString();
-  newEndpointType.value = props.endpointData.TeleporterType;
+  changeInitialEndpointType();
 }
 
 function addEndpoint() {
@@ -51,7 +51,7 @@ function addEndpoint() {
     planet: PlanetIndex,
   });
 
-  if (props.endpointData.Name) {
+  if (!isNewEndpoint.value) {
     const locationData = addressToXYZ(newEndpointAddress.value);
     if (!locationData) return;
     const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = locationData;
@@ -102,6 +102,16 @@ const isOverLimit = computed(() => {
 });
 
 const amountOverLimit = computed(() => Math.max((typeCounter.value[newEndpointType.value] ?? 0) - maxStations, 1));
+
+function changeInitialEndpointType() {
+  if ((typeCounter.value.Spacestation ?? 0) + 1 > maxStations && isNewEndpoint.value) {
+    newEndpointType.value = 'SpacestationFixPosition';
+  } else {
+    newEndpointType.value = props.endpointData.TeleporterType;
+  }
+}
+
+watch(typeCounter, changeInitialEndpointType);
 </script>
 
 <template>
