@@ -10,11 +10,11 @@ import { computed } from 'vue';
 import { endpointToGlyphs } from './common';
 
 const endpointData = useEndpointDataStore();
-const { json, filter, filterType } = storeToRefs(endpointData);
+const { allEndpoints, filter, filterType } = storeToRefs(endpointData);
 
 const renderJson = computed(() => {
   if (filter.value || filterType.value) {
-    return json.value.filter(
+    return allEndpoints.value.filter(
       (item) =>
         (!filter.value ||
           item.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
@@ -22,7 +22,7 @@ const renderJson = computed(() => {
         (!filterType.value || item.TeleporterType === filterType.value)
     );
   } else {
-    return json.value;
+    return allEndpoints.value;
   }
 });
 </script>
@@ -50,7 +50,7 @@ const renderJson = computed(() => {
     </div>
     <div class="endpoint-list mt-5 mb-6">
       <EndpointCard
-        v-for="endpoint in json"
+        v-for="endpoint in allEndpoints"
         v-show="renderJson.includes(endpoint)"
         :endpoint-json="endpoint"
         :key="endpoint.Name"

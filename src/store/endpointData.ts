@@ -21,10 +21,10 @@ export const useEndpointDataStore = defineStore('endpointData', {
   }),
 
   getters: {
-    typeCounter: (state) => {
+    allEndpoints: (state) => [...state.json, ...state.addedEndpoints],
+    typeCounter() {
       const counter: Partial<Record<TeleporterTypes, number>> = {};
-      const allEndpoints = [...state.addedEndpoints, ...state.json]
-      for (const endpoint of allEndpoints) {
+      for (const endpoint of this.allEndpoints) {
         const type = endpoint.TeleporterType;
         counter[type] ??= 0;
         counter[type]++;
