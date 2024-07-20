@@ -50,7 +50,7 @@ const renderJson = computed(() => {
     </div>
     <div class="endpoint-list mt-5 mb-6">
       <EndpointCard
-        v-for="endpoint in allEndpoints"
+        v-for="endpoint in allEndpoints.toReversed()"
         v-show="renderJson.includes(endpoint)"
         :endpoint-json="endpoint"
         :key="endpoint.Name"

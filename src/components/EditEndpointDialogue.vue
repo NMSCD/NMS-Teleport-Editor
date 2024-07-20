@@ -4,6 +4,7 @@ import { useId } from '@/helpers/id';
 import { useEndpointDataStore } from '@/store/endpointData';
 import type { DialogProps } from '@/types/props';
 import { teleporterTypes, type TeleporterTypes } from '@/types/teleportEndpoint';
+import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<DialogProps>(), {
 });
 
 const endpointData = useEndpointDataStore();
-const { addedEndpoints } = storeToRefs(endpointData);
+const { addedEndpoints, typeCounter } = storeToRefs(endpointData);
 
 const newEndpointName = ref<string>(props.endpointData.Name);
 const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
@@ -87,6 +88,20 @@ const isOutOfSafeRange = computed(() => {
   const aboveSafeRange = systemNumber > lastSafeIndex;
   return aboveSafeRange && endpointToGlyphs(props.endpointData) !== newEndpointAddress.value;
 });
+
+const isOverLimit = computed(() => {
+  const amountOfTypeEndpoints = typeCounter.value[newEndpointType.value] ?? 0;
+  // case 1: editing existing endpoint, but not changing type (total must be > max)
+  // case 2: editing existing endpoint, but changing type (total + 1 must be > max)
+  // case 3: adding new endpoint (total + 1 must be > max)
+  return (
+    (!isNewEndpoint.value && amountOfTypeEndpoints > maxStations) ||
+    ((isNewEndpoint.value || props.endpointData.TeleporterType !== newEndpointType.value) &&
+      amountOfTypeEndpoints + 1 > maxStations)
+  );
+});
+
+const amountOverLimit = computed(() => Math.max((typeCounter.value[newEndpointType.value] ?? 0) - maxStations, 1));
 </script>
 
 <template>
@@ -128,15 +143,23 @@ const isOutOfSafeRange = computed(() => {
         type="text"
       />
       <label>Type:</label>
-      <div class="select">
-        <select v-model="newEndpointType">
-          <option
-            v-for="endpointType in isNewEndpoint ? stationEndpoints : teleporterTypes"
-            :value="endpointType"
-          >
-            {{ endpointType }}
-          </option>
-        </select>
+      <div>
+        <div class="select">
+          <select v-model="newEndpointType">
+            <option
+              v-for="endpointType in isNewEndpoint ? stationEndpoints : teleporterTypes"
+              :value="endpointType"
+            >
+              {{ endpointType }}
+            </option>
+          </select>
+        </div>
+        <p
+          v-if="isOverLimit"
+          class="warning mt-1 p-1"
+        >
+          Warning: Too many {{ newEndpointType }} endpoints. {{ amountOverLimit }} will be removed.
+        </p>
       </div>
     </form>
 
