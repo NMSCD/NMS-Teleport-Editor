@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
 const endpointData = useEndpointDataStore();
-const { json } = storeToRefs(endpointData);
+const { json, addedEndpoints } = storeToRefs(endpointData);
 
 const defaultText = 'Copy modified JSON';
 const buttonText = ref(defaultText);
@@ -13,7 +13,8 @@ const copied = ref(false);
 function copyJson() {
   const indent = 2;
   const displayTime = 1500;
-  navigator.clipboard.writeText(JSON.stringify(json.value, null, indent));
+  const combinedEndpoints = [...json.value, ...addedEndpoints.value];
+  navigator.clipboard.writeText(JSON.stringify(combinedEndpoints, null, indent));
   buttonText.value = 'Copied!';
   copied.value = true;
   setTimeout(() => {

@@ -6,7 +6,7 @@ import FilterInput from './components/FilterInput.vue';
 import CopyButton from './components/CopyButton.vue';
 import { useEndpointDataStore } from './store/endpointData';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { endpointToGlyphs } from './common';
 
 const endpointData = useEndpointDataStore();
@@ -25,6 +25,8 @@ const renderJson = computed(() => {
     return json.value;
   }
 });
+
+watchEffect(() => console.log(json.value.map(item => item.Name)))
 </script>
 
 <template>

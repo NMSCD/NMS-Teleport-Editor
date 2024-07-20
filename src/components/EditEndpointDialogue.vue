@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<DialogProps>(), {
 });
 
 const endpointData = useEndpointDataStore();
-const { json } = storeToRefs(endpointData);
+const { addedEndpoints } = storeToRefs(endpointData);
 
 const newEndpointName = ref<string>(props.endpointData.Name);
 const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
@@ -64,7 +64,9 @@ function addEndpoint() {
     props.endpointData.UniverseAddress.RealityIndex = parseInt(newEndpointGalaxy.value) - 1;
     props.endpointData.TeleporterType = newEndpointType.value;
   } else {
-    json.value.unshift(endpoint);
+    // start of the array: oldest (bottom of list in game)
+    // end of the array: newest (top of list in game)
+    addedEndpoints.value.unshift(endpoint);
   }
 
   // reset to initial state

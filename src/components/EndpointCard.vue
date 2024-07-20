@@ -11,12 +11,13 @@ const props = defineProps<{
 }>();
 
 const endpointData = useEndpointDataStore();
-const { json } = storeToRefs(endpointData);
+const { json, addedEndpoints } = storeToRefs(endpointData);
 
 const address = computed(() => endpointToGlyphs(props.endpointJson));
 
 function removeEndpoint() {
   json.value = json.value.filter((t) => t !== props.endpointJson);
+  addedEndpoints.value = addedEndpoints.value.filter((t) => t !== props.endpointJson);
 }
 </script>
 
