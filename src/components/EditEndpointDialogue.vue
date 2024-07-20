@@ -3,12 +3,11 @@ import { addressToXYZ, createEndpoint, endpointToGlyphs } from '@/common';
 import { useId } from '@/helpers/id';
 import { useEndpointDataStore } from '@/store/endpointData';
 import type { DialogProps } from '@/types/props';
-import { teleporterTypesEnum, type TeleporterTypes } from '@/types/teleportEndpoint';
+import { teleporterTypes, type TeleporterTypes } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 
 const props = withDefaults(defineProps<DialogProps>(), {
-  open: false,
   endpointData: () => createEndpoint(),
 });
 
@@ -19,6 +18,11 @@ const newEndpointName = ref<string>(props.endpointData.Name);
 const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
 const newEndpointGalaxy = ref<string>((props.endpointData.UniverseAddress.RealityIndex + 1).toString());
 const newEndpointType = ref<TeleporterTypes>(props.endpointData.TeleporterType);
+
+const stationEndpoints = teleporterTypes.filter((item) => item.startsWith('Spacestation'));
+
+const isNewEndpoint = computed(() => !props.endpointData.Name);
+const editButtonText = computed(() => (isNewEndpoint.value ? 'Add Endpoint' : 'Save Changes'));
 
 function resetEndpointInputs() {
   newEndpointName.value = props.endpointData.Name;
@@ -74,8 +78,6 @@ const ids = {
   galaxyInput: 'galaxyInput' + uniqueId,
 };
 
-const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' : 'Add Endpoint'));
-
 const isOutOfSafeRange = computed(() => {
   const systemIndex = newEndpointAddress.value.substring(1, 4);
   const systemNumber = parseInt(systemIndex, 16);
@@ -127,7 +129,7 @@ const isOutOfSafeRange = computed(() => {
       <div class="select">
         <select v-model="newEndpointType">
           <option
-            v-for="endpointType in teleporterTypesEnum"
+            v-for="endpointType in isNewEndpoint ? stationEndpoints : teleporterTypes"
             :value="endpointType"
           >
             {{ endpointType }}

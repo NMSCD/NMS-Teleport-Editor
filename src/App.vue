@@ -53,7 +53,7 @@ const renderJson = computed(() => {
         v-for="endpoint in json"
         v-show="renderJson.includes(endpoint)"
         :endpoint-json="endpoint"
-        :key="endpoint.Name"
+        :key="`${endpoint.Name}${endpoint.UniverseAddress}`"
       />
     </div>
   </main>
