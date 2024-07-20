@@ -3,14 +3,14 @@ import { useEndpointDataStore } from '@/store/endpointData';
 import type { TeleportEndpoint, TeleporterTypes } from '@/types/teleportEndpoint';
 import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const endpointData = useEndpointDataStore();
 const { json, addedEndpoints, typeCounter } = storeToRefs(endpointData);
 
-const defaultText = 'Copy modified JSON';
-const buttonText = ref(defaultText);
-const copied = ref(false);
+const isCopied = ref(false);
+
+const buttonText = computed(() => (isCopied.value ? 'Copied!' : 'Copy modified JSON'));
 
 function getExcessEndpoints(arr: TeleportEndpoint[], type: TeleporterTypes) {
   const endpointCount = typeCounter.value[type] ?? 0;
@@ -31,18 +31,16 @@ function copyJson() {
   const combinedEndpoints = [...filteredEndpoints, ...addedEndpoints.value];
 
   navigator.clipboard.writeText(JSON.stringify(combinedEndpoints, null, indent));
-  buttonText.value = 'Copied!';
-  copied.value = true;
+  isCopied.value = true;
   setTimeout(() => {
-    buttonText.value = defaultText;
-    copied.value = false;
+    isCopied.value = false;
   }, displayTime);
 }
 </script>
 
 <template>
   <button
-    :class="{ 'no-interaction': copied, 'is-outlined': !copied }"
+    :class="{ 'no-interaction': isCopied, 'is-outlined': !isCopied }"
     class="button is-success"
     @click="copyJson"
   >
