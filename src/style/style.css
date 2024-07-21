@@ -5,6 +5,16 @@
     url('/NMS-Glyphs-Mono.ttf') format('truetype');
 }
 
+:root {
+  --link-hover: #363636;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --link-hover: #c9c9c9;
+  }
+}
+
 html {
   scrollbar-gutter: stable;
 }
@@ -22,6 +32,13 @@ html {
   }
 }
 
-.select select {
-  width: 100%;
+.select {
+  &,
+  select {
+    width: 100%;
+  }
+}
+
+a:hover {
+  color: var(--link-hover);
 }

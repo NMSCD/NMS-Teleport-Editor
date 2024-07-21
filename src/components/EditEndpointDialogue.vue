@@ -3,28 +3,33 @@ import { addressToXYZ, createEndpoint, endpointToGlyphs } from '@/common';
 import { useId } from '@/helpers/id';
 import { useEndpointDataStore } from '@/store/endpointData';
 import type { DialogProps } from '@/types/props';
-import { teleporterTypesEnum, type TeleporterTypes } from '@/types/teleportEndpoint';
+import { teleporterTypes, type TeleporterTypes } from '@/types/teleportEndpoint';
+import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<DialogProps>(), {
-  open: false,
   endpointData: () => createEndpoint(),
 });
 
 const endpointData = useEndpointDataStore();
-const { json } = storeToRefs(endpointData);
+const { addedEndpoints, typeCounter } = storeToRefs(endpointData);
 
 const newEndpointName = ref<string>(props.endpointData.Name);
 const newEndpointAddress = ref<string>(endpointToGlyphs(props.endpointData));
 const newEndpointGalaxy = ref<string>((props.endpointData.UniverseAddress.RealityIndex + 1).toString());
 const newEndpointType = ref<TeleporterTypes>(props.endpointData.TeleporterType);
 
+const stationEndpoints = teleporterTypes.filter((item) => item.startsWith('Spacestation'));
+
+const isNewEndpoint = computed(() => !props.endpointData.Name);
+const editButtonText = computed(() => (isNewEndpoint.value ? 'Add Endpoint' : 'Save Changes'));
+
 function resetEndpointInputs() {
   newEndpointName.value = props.endpointData.Name;
   newEndpointAddress.value = endpointToGlyphs(props.endpointData);
   newEndpointGalaxy.value = (props.endpointData.UniverseAddress.RealityIndex + 1).toString();
-  newEndpointType.value = props.endpointData.TeleporterType;
+  changeInitialEndpointType();
 }
 
 function addEndpoint() {
@@ -46,7 +51,7 @@ function addEndpoint() {
     planet: PlanetIndex,
   });
 
-  if (props.endpointData.Name) {
+  if (!isNewEndpoint.value) {
     const locationData = addressToXYZ(newEndpointAddress.value);
     if (!locationData) return;
     const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = locationData;
@@ -60,7 +65,9 @@ function addEndpoint() {
     props.endpointData.UniverseAddress.RealityIndex = parseInt(newEndpointGalaxy.value) - 1;
     props.endpointData.TeleporterType = newEndpointType.value;
   } else {
-    json.value.unshift(endpoint);
+    // start of the array: oldest (bottom of list in game)
+    // end of the array: newest (top of list in game)
+    addedEndpoints.value.unshift(endpoint);
   }
 
   // reset to initial state
@@ -74,8 +81,6 @@ const ids = {
   galaxyInput: 'galaxyInput' + uniqueId,
 };
 
-const editButtonText = computed(() => (props.endpointData.Name ? 'Save Changes' : 'Add Endpoint'));
-
 const isOutOfSafeRange = computed(() => {
   const systemIndex = newEndpointAddress.value.substring(1, 4);
   const systemNumber = parseInt(systemIndex, 16);
@@ -83,6 +88,30 @@ const isOutOfSafeRange = computed(() => {
   const aboveSafeRange = systemNumber > lastSafeIndex;
   return aboveSafeRange && endpointToGlyphs(props.endpointData) !== newEndpointAddress.value;
 });
+
+const isOverLimit = computed(() => {
+  const amountOfTypeEndpoints = typeCounter.value[newEndpointType.value] ?? 0;
+  // case 1: editing existing endpoint, but not changing type (total must be > max)
+  // case 2: editing existing endpoint, but changing type (total + 1 must be > max)
+  // case 3: adding new endpoint (total + 1 must be > max)
+  return (
+    (!isNewEndpoint.value && amountOfTypeEndpoints > maxStations) ||
+    ((isNewEndpoint.value || props.endpointData.TeleporterType !== newEndpointType.value) &&
+      amountOfTypeEndpoints + 1 > maxStations)
+  );
+});
+
+const amountOverLimit = computed(() => Math.max((typeCounter.value[newEndpointType.value] ?? 0) - maxStations, 1));
+
+function changeInitialEndpointType() {
+  if ((typeCounter.value.Spacestation ?? 0) + 1 > maxStations && isNewEndpoint.value) {
+    newEndpointType.value = 'SpacestationFixPosition';
+  } else {
+    newEndpointType.value = props.endpointData.TeleporterType;
+  }
+}
+
+watch(typeCounter, changeInitialEndpointType);
 </script>
 
 <template>
@@ -124,15 +153,23 @@ const isOutOfSafeRange = computed(() => {
         type="text"
       />
       <label>Type:</label>
-      <div class="select">
-        <select v-model="newEndpointType">
-          <option
-            v-for="endpointType in teleporterTypesEnum"
-            :value="endpointType"
-          >
-            {{ endpointType }}
-          </option>
-        </select>
+      <div>
+        <div class="select">
+          <select v-model="newEndpointType">
+            <option
+              v-for="endpointType in isNewEndpoint ? stationEndpoints : teleporterTypes"
+              :value="endpointType"
+            >
+              {{ endpointType }}
+            </option>
+          </select>
+        </div>
+        <p
+          v-if="isOverLimit"
+          class="warning mt-1 p-1"
+        >
+          Warning: Too many {{ newEndpointType }} endpoints. {{ amountOverLimit }} will be removed.
+        </p>
       </div>
     </form>
 

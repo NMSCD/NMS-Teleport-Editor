@@ -1,20 +1,29 @@
-export const teleporterTypesEnum = {
-  Base: 'Base',
-  Spacestation: 'Spacestation',
-  Atlas: 'Atlas',
-  PlanetAwayFromShip: 'PlanetAwayFromShip',
-  ExternalBase: 'ExternalBase',
-  EmergencyGalaxyFix: 'EmergencyGalaxyFix',
-  OnNexus: 'OnNexus',
-  SpacestationFixPosition: 'SpacestationFixPosition',
-  Settlement: 'Settlement',
-  Freighter: 'Freighter',
-  Frigate: 'Frigate',
-} as const;
+export type TeleporterTypes =
+  | 'Base'
+  | 'Spacestation'
+  | 'Atlas'
+  | 'PlanetAwayFromShip'
+  | 'ExternalBase'
+  | 'EmergencyGalaxyFix'
+  | 'OnNexus'
+  | 'SpacestationFixPosition'
+  | 'Settlement'
+  | 'Freighter'
+  | 'Frigate';
 
-type ObjectValues<T> = T[keyof T];
-
-export type TeleporterTypes = ObjectValues<typeof teleporterTypesEnum>;
+export const teleporterTypes: TeleporterTypes[] = [
+  'Atlas',
+  'Base',
+  'EmergencyGalaxyFix',
+  'ExternalBase',
+  'Freighter',
+  'Frigate',
+  'OnNexus',
+  'PlanetAwayFromShip',
+  'Settlement',
+  'Spacestation',
+  'SpacestationFixPosition',
+];
 
 export interface TeleportEndpoint {
   UniverseAddress: {

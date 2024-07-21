@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { useEndpointDataStore } from '@/store/endpointData';
-import { teleporterTypesEnum } from '@/types/teleportEndpoint';
+import { teleporterTypes } from '@/types/teleportEndpoint';
 import { storeToRefs } from 'pinia';
 import FilterInputWrapper from './FilterInputWrapper.vue';
 
 const endpointData = useEndpointDataStore();
 const { filter, filterType } = storeToRefs(endpointData);
 
-// what the actual fuck is this, please explain what the hell this empty string property is
-const teleporterFilterTypes = {
-  '': '',
-  ...teleporterTypesEnum,
-};
+// These are the possible filters. You can either filter by all teleporter types, or by nothing.
+const teleporterFilterTypes = ['', ...teleporterTypes];
 </script>
 
 <template>
