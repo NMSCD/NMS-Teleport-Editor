@@ -14,7 +14,7 @@
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
-    "vue": "^3.4.34"
+    "vue": "^3.4.35"
   },
   "dependencies": {
     "@nmscd/coordinate-conversion": "^1.2.4",
