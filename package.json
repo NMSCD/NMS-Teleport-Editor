@@ -21,6 +21,6 @@
     "@vitejs/plugin-vue": "^5.1.2",
     "bulma": "^1.0.2",
     "pinia": "^2.2.2",
-    "vue-tsc": "^2.0.29"
+    "vue-tsc": "^2.1.4"
   }
 }
