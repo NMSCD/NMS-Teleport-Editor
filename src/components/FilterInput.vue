@@ -16,7 +16,7 @@ const teleporterFilterTypes = ['', ...teleporterTypes];
     <label
       class="has-text-weight-bold"
       for="filterInput"
-      >Filter Endpoints</label
+      >Search Endpoints</label
     >
     <input
       v-model="filter"
