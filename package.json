@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@nmscd/coordinate-conversion": "^1.2.4",
-    "@vitejs/plugin-vue": "^5.1.4",
+    "@vitejs/plugin-vue": "^5.1.5",
     "bulma": "^1.0.2",
     "pinia": "^2.2.6",
     "vue-tsc": "^2.1.10"
