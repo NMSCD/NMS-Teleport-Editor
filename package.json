@@ -19,7 +19,7 @@
   "dependencies": {
     "@nmscd/coordinate-conversion": "^1.2.4",
     "@vitejs/plugin-vue": "^5.2.1",
-    "bulma": "^1.0.2",
+    "bulma": "^1.0.3",
     "pinia": "^2.3.0",
     "vue-tsc": "^2.2.0"
   }
