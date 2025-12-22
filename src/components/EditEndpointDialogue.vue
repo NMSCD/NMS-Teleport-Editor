@@ -36,8 +36,8 @@ function addEndpoint() {
   const minGalaxy = 1;
   const maxGalaxy = 256;
   const coordinateData = addressToXYZ(newEndpointAddress.value);
-  const galaxyNumber = parseInt(newEndpointGalaxy.value);
-  if (!coordinateData || isNaN(galaxyNumber) || galaxyNumber < minGalaxy || galaxyNumber > maxGalaxy) return;
+  const galaxyNumber = Number.parseInt(newEndpointGalaxy.value);
+  if (!coordinateData || Number.isNaN(galaxyNumber) || galaxyNumber < minGalaxy || galaxyNumber > maxGalaxy) return;
   const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = coordinateData;
 
   const endpoint = createEndpoint({
@@ -51,7 +51,11 @@ function addEndpoint() {
     planet: PlanetIndex,
   });
 
-  if (!isNewEndpoint.value) {
+  if (isNewEndpoint.value) {
+    // start of the array: oldest (bottom of list in game)
+    // end of the array: newest (top of list in game)
+    addedEndpoints.value.unshift(endpoint);
+  } else {
     const locationData = addressToXYZ(newEndpointAddress.value);
     if (!locationData) return;
     const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = locationData;
@@ -62,12 +66,8 @@ function addEndpoint() {
     GalacticAddressData.VoxelX = VoxelX;
     GalacticAddressData.VoxelY = VoxelY;
     GalacticAddressData.VoxelZ = VoxelZ;
-    props.endpointData.UniverseAddress.RealityIndex = parseInt(newEndpointGalaxy.value) - 1;
+    props.endpointData.UniverseAddress.RealityIndex = Number.parseInt(newEndpointGalaxy.value) - 1;
     props.endpointData.TeleporterType = newEndpointType.value;
-  } else {
-    // start of the array: oldest (bottom of list in game)
-    // end of the array: newest (top of list in game)
-    addedEndpoints.value.unshift(endpoint);
   }
 
   // reset to initial state
@@ -83,7 +83,7 @@ const ids = {
 
 const isOutOfSafeRange = computed(() => {
   const systemIndex = newEndpointAddress.value.substring(1, 4);
-  const systemNumber = parseInt(systemIndex, 16);
+  const systemNumber = Number.parseInt(systemIndex, 16);
   const lastSafeIndex = 122;
   const aboveSafeRange = systemNumber > lastSafeIndex;
   return aboveSafeRange && endpointToGlyphs(props.endpointData) !== newEndpointAddress.value;
