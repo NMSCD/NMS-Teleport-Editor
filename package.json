@@ -15,7 +15,7 @@
     "sass-embedded": "^1.104.1",
     "typescript": "^5.9.3",
     "vite": "^8.3.0",
-    "vue": "^3.5.42"
+    "vue": "^3.5.43"
   },
   "dependencies": {
     "@nmscd/coordinate-conversion": "^1.2.4",
