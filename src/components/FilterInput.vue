@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/store/endpointData';
-import { teleporterTypes } from '@/types/teleportEndpoint';
-import { storeToRefs } from 'pinia';
 import FilterInputWrapper from './FilterInputWrapper.vue';
+import { storeToRefs } from 'pinia';
+import { teleporterTypes } from '@/variables/teleporterTypes';
+import { useEndpointDataStore } from '@/store/endpointData';
 
 const endpointData = useEndpointDataStore();
 const { filter, filterType } = storeToRefs(endpointData);
@@ -31,6 +31,7 @@ const teleporterFilterTypes = ['', ...teleporterTypes];
       <select v-model="filterType">
         <option
           v-for="teleporterType in teleporterFilterTypes"
+          :key="teleporterType"
           :value="teleporterType"
         >
           {{ teleporterType }}

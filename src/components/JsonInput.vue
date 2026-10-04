@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/store/endpointData';
 import { storeToRefs } from 'pinia';
+import { useEndpointDataStore } from '@/store/endpointData';
 
 const endpointData = useEndpointDataStore();
 const { jsonInputString, jsonError } = storeToRefs(endpointData);

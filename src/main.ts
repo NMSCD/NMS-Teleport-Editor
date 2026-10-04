@@ -1,10 +1,10 @@
-import 'bulma';
 import './style/style.css';
 
 import App from './App.vue';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
+// oxlint-disable-next-line typescript/no-unsafe-argument
 const app = createApp(App);
 
 app.use(createPinia());

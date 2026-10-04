@@ -26,7 +26,7 @@ const defaultEndpointArgs: EndpointArgs = {
 };
 
 export function createEndpoint(
-  { name, teleporterType, x, y, z, galaxy, systemIndex, planet }: EndpointArgs = structuredClone(defaultEndpointArgs)
+  { name, teleporterType, x, y, z, galaxy, systemIndex, planet }: EndpointArgs = structuredClone(defaultEndpointArgs),
 ): TeleportEndpoint {
   const defaultFacing: Pos = [1, 1, 1];
   return {
@@ -46,10 +46,13 @@ export function createEndpoint(
     Name: name,
     CalcWarpOffset: false,
     IsFeatured: false,
+    IsFavourite: false,
   };
 }
 
-const xyzToGlyphs = (voxelCoords: VoxelCoordinates): string => VoxelCoordinate(voxelCoords).toGlyph().value.code;
+const xyzToGlyphs = (voxelCoords: Readonly<VoxelCoordinates>): string =>
+  // oxlint-disable-next-line new-cap
+  VoxelCoordinate(voxelCoords).toGlyph().value.code;
 
 export function endpointToGlyphs(endpoint: TeleportEndpoint) {
   const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = endpoint.UniverseAddress.GalacticAddress;
@@ -60,7 +63,9 @@ export function addressToXYZ(input: string) {
   const glyphLength = 12;
   if (input.length < glyphLength) return;
   const coordinates =
+    // oxlint-disable-next-line new-cap
     input.trim().length === glyphLength ? PortalCode({ code: input }).toGalacticCoordinates().value.code : input;
 
+  // oxlint-disable-next-line new-cap
   return GalacticCoordinate({ code: coordinates }).toVoxel().value;
 }

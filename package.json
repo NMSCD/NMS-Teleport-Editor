@@ -1,27 +1,34 @@
 {
   "name": "nms-teleport-editor",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write src/"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.19",
-    "prettier": "^3.5.3",
-    "sass-embedded": "^1.89.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vue": "^3.5.14"
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "lint:ci": "oxlint --deny-warnings"
   },
   "dependencies": {
     "@nmscd/coordinate-conversion": "^1.2.4",
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "@vueuse/core": "^15.0.0",
     "bulma": "^1.0.2",
-    "pinia": "^3.0.2",
-    "vue-tsc": "^2.2.10"
+    "pinia": "^4.0.3",
+    "vue-tsc": "^3.3.11",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "oxlint-tsgolint": "^7.0.2003",
+    "sass-embedded": "^1.105.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.43"
   }
 }

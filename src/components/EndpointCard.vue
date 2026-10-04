@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { endpointToGlyphs } from '@/common';
-import { useEndpointDataStore } from '@/store/endpointData';
-import { type TeleportEndpoint } from '@/types/teleportEndpoint';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 import EditDialogueButton from './EditDialogueButton.vue';
+import type { TeleportEndpoint } from '@/types/teleportEndpoint';
+import { computed } from 'vue';
+import { endpointToGlyphs } from '@/common';
+import { storeToRefs } from 'pinia';
+import { useEndpointDataStore } from '@/store/endpointData';
 
 const props = defineProps<{
   endpointJson: TeleportEndpoint;

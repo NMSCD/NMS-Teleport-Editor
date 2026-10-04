@@ -1,45 +1,5 @@
-export type TeleporterTypes =
-  | 'Base'
-  | 'Spacestation'
-  | 'Atlas'
-  | 'PlanetAwayFromShip'
-  | 'ExternalBase'
-  | 'EmergencyGalaxyFix'
-  | 'OnNexus'
-  | 'SpacestationFixPosition'
-  | 'Settlement'
-  | 'Freighter'
-  | 'Frigate';
+import type { endpointSchema, teleporterTypesEnum } from '@/variables/schema';
+import type { z } from 'zod';
 
-export const teleporterTypes: TeleporterTypes[] = [
-  'Atlas',
-  'Base',
-  'EmergencyGalaxyFix',
-  'ExternalBase',
-  'Freighter',
-  'Frigate',
-  'OnNexus',
-  'PlanetAwayFromShip',
-  'Settlement',
-  'Spacestation',
-  'SpacestationFixPosition',
-];
-
-export interface TeleportEndpoint {
-  UniverseAddress: {
-    RealityIndex: number;
-    GalacticAddress: {
-      VoxelX: number;
-      VoxelY: number;
-      VoxelZ: number;
-      SolarSystemIndex: number;
-      PlanetIndex: number;
-    };
-  };
-  Position: [number, number, number];
-  Facing: [number, number, number];
-  TeleporterType: TeleporterTypes;
-  Name: string;
-  CalcWarpOffset: boolean;
-  IsFeatured: boolean;
-}
+export type TeleporterTypes = z.infer<typeof teleporterTypesEnum>;
+export type TeleportEndpoint = z.infer<typeof endpointSchema>;

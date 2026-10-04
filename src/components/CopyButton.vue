@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/store/endpointData';
 import type { TeleportEndpoint, TeleporterTypes } from '@/types/teleportEndpoint';
+import { computed } from 'vue';
 import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { useClipboard } from '@vueuse/core';
+import { useEndpointDataStore } from '@/store/endpointData';
 
 const endpointData = useEndpointDataStore();
 const { json, addedEndpoints, typeCounter } = storeToRefs(endpointData);
 
-const isCopied = ref(false);
+const textToCopy = computed(() => prepareJson());
+
+const { copy, copied: isCopied } = useClipboard({ source: textToCopy });
 
 const buttonText = computed(() => (isCopied.value ? 'Copied!' : 'Copy modified JSON'));
 
@@ -20,21 +23,16 @@ function getExcessEndpoints(arr: TeleportEndpoint[], type: TeleporterTypes) {
   return removeStations;
 }
 
-function copyJson() {
+function prepareJson() {
   const indent = 2;
-  const displayTime = 1500;
   const excessStations = getExcessEndpoints(json.value, 'Spacestation');
   const excessStationsFixPos = getExcessEndpoints(json.value, 'SpacestationFixPosition');
   const filteredEndpoints = json.value.filter(
-    (item) => !excessStations.includes(item) && !excessStationsFixPos.includes(item)
+    (item) => !excessStations.includes(item) && !excessStationsFixPos.includes(item),
   );
   const combinedEndpoints = [...filteredEndpoints, ...addedEndpoints.value];
 
-  navigator.clipboard.writeText(JSON.stringify(combinedEndpoints, null, indent));
-  isCopied.value = true;
-  setTimeout(() => {
-    isCopied.value = false;
-  }, displayTime);
+  return JSON.stringify(combinedEndpoints, null, indent);
 }
 </script>
 
@@ -42,7 +40,7 @@ function copyJson() {
   <button
     :class="{ 'no-interaction': isCopied, 'is-outlined': !isCopied }"
     class="button is-success"
-    @click="copyJson"
+    @click="copy()"
   >
     {{ buttonText }}
   </button>
