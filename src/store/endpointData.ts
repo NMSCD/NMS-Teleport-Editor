@@ -37,6 +37,7 @@ export const useEndpointDataStore = defineStore('endpointData', {
   actions: {
     parseJson() {
       try {
+        this.addedEndpoints = [];
         const parsedJson: unknown = JSON.parse(this.jsonInputString || '[]');
         this.json = endpointSchema.array().parse(parsedJson);
         this.jsonError = false;
