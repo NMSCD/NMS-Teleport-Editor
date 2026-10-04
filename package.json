@@ -1,7 +1,7 @@
 {
   "name": "nms-teleport-editor",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,13 @@
     "lint:fix": "oxlint --fix",
     "lint:ci": "oxlint --deny-warnings"
   },
+  "dependencies": {
+    "@nmscd/coordinate-conversion": "^1.2.4",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "bulma": "^1.0.2",
+    "pinia": "^4.0.3",
+    "vue-tsc": "^3.3.11"
+  },
   "devDependencies": {
     "@types/node": "^26.6.2",
     "oxfmt": "^0.71.0",
@@ -21,12 +28,5 @@
     "typescript": "^6.0.3",
     "vite": "^8.3.0",
     "vue": "^3.5.43"
-  },
-  "dependencies": {
-    "@nmscd/coordinate-conversion": "^1.2.4",
-    "@vitejs/plugin-vue": "^6.0.9",
-    "bulma": "^1.0.2",
-    "pinia": "^4.0.3",
-    "vue-tsc": "^3.3.11"
   }
 }

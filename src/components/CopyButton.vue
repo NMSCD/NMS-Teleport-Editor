@@ -26,7 +26,7 @@ function copyJson() {
   const excessStations = getExcessEndpoints(json.value, 'Spacestation');
   const excessStationsFixPos = getExcessEndpoints(json.value, 'SpacestationFixPosition');
   const filteredEndpoints = json.value.filter(
-    (item) => !excessStations.includes(item) && !excessStationsFixPos.includes(item)
+    (item) => !excessStations.includes(item) && !excessStationsFixPos.includes(item),
   );
   const combinedEndpoints = [...filteredEndpoints, ...addedEndpoints.value];
 

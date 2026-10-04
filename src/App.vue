@@ -19,7 +19,7 @@ const renderJson = computed(() => {
         (!filter.value ||
           item.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
           endpointToGlyphs(item).includes(filter.value.toUpperCase())) &&
-        (!filterType.value || item.TeleporterType === filterType.value)
+        (!filterType.value || item.TeleporterType === filterType.value),
     );
   } else {
     return allEndpoints.value;

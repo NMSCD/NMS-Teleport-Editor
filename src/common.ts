@@ -26,7 +26,7 @@ const defaultEndpointArgs: EndpointArgs = {
 };
 
 export function createEndpoint(
-  { name, teleporterType, x, y, z, galaxy, systemIndex, planet }: EndpointArgs = structuredClone(defaultEndpointArgs)
+  { name, teleporterType, x, y, z, galaxy, systemIndex, planet }: EndpointArgs = structuredClone(defaultEndpointArgs),
 ): TeleportEndpoint {
   const defaultFacing: Pos = [1, 1, 1];
   return {

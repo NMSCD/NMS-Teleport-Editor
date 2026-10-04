@@ -4,7 +4,7 @@
   "categories": {},
   "options": {
     "reportUnusedDisableDirectives": "warn",
-    "typeAware": true,
+    "typeAware": true
     // "typeCheck": true, // still has some issues with Vue (module not found: App.vue)
   },
   "rules": {
@@ -274,7 +274,7 @@
     "typescript/await-thenable": "warn",
     "typescript/ban-ts-comment": [
       "warn",
-      { "ts-expect-error": true, "ts-ignore": true, "ts-nocheck": true, "ts-check": true },
+      { "ts-expect-error": true, "ts-ignore": true, "ts-nocheck": true, "ts-check": true }
     ],
     "typescript/ban-types": "warn",
     "typescript/consistent-generic-constructors": "warn",
@@ -354,8 +354,8 @@
         "allowBoolean": false,
         "allowNullish": false,
         "allowNumberAndString": false,
-        "allowRegExp": false,
-      },
+        "allowRegExp": false
+      }
     ],
     "typescript/restrict-template-expressions": "warn",
     "typescript/return-await": ["warn", "in-try-catch"],
@@ -519,36 +519,36 @@
     "vue/prefer-import-from-vue": "warn",
     "vue/require-typed-ref": "warn",
     "vue/valid-define-emits": "warn",
-    "vue/valid-define-props": "warn",
+    "vue/valid-define-props": "warn"
   },
   "overrides": [
     {
       "files": ["*.vue", "*.d.ts"],
       "rules": {
-        "import/unambiguous": "off", // reports some Vue components erroneously if they don't have imports/exports
-      },
+        "import/unambiguous": "off" // reports some Vue components erroneously if they don't have imports/exports
+      }
     },
     {
       "files": ["**/*.test.ts"],
       "rules": {
         "vitest/require-hook": "warn",
-        "jest/require-hook": "warn",
-      },
-    },
+        "jest/require-hook": "warn"
+      }
+    }
   ],
   "settings": {
     "jsx-a11y": {
       "polymorphicPropName": null,
       "components": {},
-      "attributes": {},
+      "attributes": {}
     },
     "next": {
-      "rootDir": [],
+      "rootDir": []
     },
     "react": {
       "formComponents": [],
       "linkComponents": [],
-      "version": null,
+      "version": null
     },
     "jsdoc": {
       "ignorePrivate": false,
@@ -558,15 +558,15 @@
       "augmentsExtendsReplacesDocs": false,
       "implementsReplacesDocs": false,
       "exemptDestructuredRootsFromChecks": false,
-      "tagNamePreference": {},
+      "tagNamePreference": {}
     },
     "vitest": {
-      "typecheck": false,
-    },
+      "typecheck": false
+    }
   },
   "env": {
-    "builtin": true,
+    "builtin": true
   },
   "globals": {},
-  "ignorePatterns": [],
+  "ignorePatterns": []
 }
