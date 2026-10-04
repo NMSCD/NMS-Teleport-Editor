@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import JsonInput from './components/JsonInput.vue';
-import EndpointCard from './components/EndpointCard.vue';
-import EditDialogueButton from './components/EditDialogueButton.vue';
-import FilterInput from './components/FilterInput.vue';
 import CopyButton from './components/CopyButton.vue';
-import { useEndpointDataStore } from './store/endpointData';
-import { storeToRefs } from 'pinia';
+import EditDialogueButton from './components/EditDialogueButton.vue';
+import EndpointCard from './components/EndpointCard.vue';
+import FilterInput from './components/FilterInput.vue';
+import JsonInput from './components/JsonInput.vue';
 import { computed } from 'vue';
 import { endpointToGlyphs } from './common';
+import { storeToRefs } from 'pinia';
+import { useEndpointDataStore } from './store/endpointData';
 
 const endpointData = useEndpointDataStore();
 const { allEndpoints, filter, filterType } = storeToRefs(endpointData);
