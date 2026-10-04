@@ -1,3 +1,3 @@
-import { teleporterTypesEnum } from "./schema";
+import { teleporterTypesEnum } from './schema';
 
 export const teleporterTypes = Object.values(teleporterTypesEnum.enum);

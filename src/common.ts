@@ -46,12 +46,13 @@ export function createEndpoint(
     Name: name,
     CalcWarpOffset: false,
     IsFeatured: false,
-    IsFavourite: false
+    IsFavourite: false,
   };
 }
 
 // oxlint-disable-next-line new-cap
-const xyzToGlyphs = (voxelCoords: Readonly<VoxelCoordinates>): string => VoxelCoordinate(voxelCoords).toGlyph().value.code;
+const xyzToGlyphs = (voxelCoords: Readonly<VoxelCoordinates>): string =>
+  VoxelCoordinate(voxelCoords).toGlyph().value.code;
 
 export function endpointToGlyphs(endpoint: TeleportEndpoint) {
   const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = endpoint.UniverseAddress.GalacticAddress;
