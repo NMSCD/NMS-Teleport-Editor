@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useEndpointDataStore } from '@/store/endpointData';
 import type { TeleportEndpoint, TeleporterTypes } from '@/types/teleportEndpoint';
+import { computed, ref } from 'vue';
 import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { useEndpointDataStore } from '@/store/endpointData';
 
 const endpointData = useEndpointDataStore();
 const { json, addedEndpoints, typeCounter } = storeToRefs(endpointData);

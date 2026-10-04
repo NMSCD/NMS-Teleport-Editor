@@ -46,10 +46,12 @@ export function createEndpoint(
     Name: name,
     CalcWarpOffset: false,
     IsFeatured: false,
+    IsFavourite: false
   };
 }
 
-const xyzToGlyphs = (voxelCoords: VoxelCoordinates): string => VoxelCoordinate(voxelCoords).toGlyph().value.code;
+// oxlint-disable-next-line new-cap
+const xyzToGlyphs = (voxelCoords: Readonly<VoxelCoordinates>): string => VoxelCoordinate(voxelCoords).toGlyph().value.code;
 
 export function endpointToGlyphs(endpoint: TeleportEndpoint) {
   const { VoxelX, VoxelY, VoxelZ, SolarSystemIndex, PlanetIndex } = endpoint.UniverseAddress.GalacticAddress;
@@ -60,7 +62,9 @@ export function addressToXYZ(input: string) {
   const glyphLength = 12;
   if (input.length < glyphLength) return;
   const coordinates =
+    // oxlint-disable-next-line new-cap
     input.trim().length === glyphLength ? PortalCode({ code: input }).toGalacticCoordinates().value.code : input;
 
+  // oxlint-disable-next-line new-cap
   return GalacticCoordinate({ code: coordinates }).toVoxel().value;
 }

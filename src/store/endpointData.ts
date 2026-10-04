@@ -1,5 +1,6 @@
 import type { TeleportEndpoint, TeleporterTypes } from '@/types/teleportEndpoint';
 import { defineStore } from 'pinia';
+import { endpointSchema } from '@/variables/schema';
 
 interface State {
   jsonInputString: string;
@@ -36,7 +37,8 @@ export const useEndpointDataStore = defineStore('endpointData', {
   actions: {
     parseJson() {
       try {
-        this.json = JSON.parse(this.jsonInputString || '[]');
+        const parsedJson: unknown = JSON.parse(this.jsonInputString || '[]');
+        this.json = endpointSchema.array().parse(parsedJson);
         this.jsonError = false;
       } catch (error) {
         console.error(error);

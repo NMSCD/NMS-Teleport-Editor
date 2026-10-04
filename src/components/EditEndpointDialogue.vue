@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { addressToXYZ, createEndpoint, endpointToGlyphs } from '@/common';
-import { useId } from '@/helpers/id';
-import { useEndpointDataStore } from '@/store/endpointData';
+import { computed, ref, watch } from 'vue';
 import type { DialogProps } from '@/types/props';
-import { teleporterTypes, type TeleporterTypes } from '@/types/teleportEndpoint';
+import type { TeleporterTypes } from '@/types/teleportEndpoint';
 import { maxStations } from '@/variables/limits';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { teleporterTypes } from '@/variables/teleporterTypes';
+import { useEndpointDataStore } from '@/store/endpointData';
+import { useId } from '@/helpers/id';
 
 const props = withDefaults(defineProps<DialogProps>(), {
   endpointData: () => createEndpoint(),
@@ -76,13 +77,13 @@ function addEndpoint() {
 
 const uniqueId = useId();
 const ids = {
-  nameInput: 'nameInput' + uniqueId,
-  addressInput: 'addressInput' + uniqueId,
-  galaxyInput: 'galaxyInput' + uniqueId,
+  nameInput: `nameInput${uniqueId}`,
+  addressInput: `addressInput${uniqueId}`,
+  galaxyInput: `galaxyInput${uniqueId}`,
 };
 
 const isOutOfSafeRange = computed(() => {
-  const systemIndex = newEndpointAddress.value.substring(1, 4);
+  const systemIndex = newEndpointAddress.value.slice(1, 4);
   const systemNumber = Number.parseInt(systemIndex, 16);
   const lastSafeIndex = 122;
   const aboveSafeRange = systemNumber > lastSafeIndex;
@@ -104,11 +105,10 @@ const isOverLimit = computed(() => {
 const amountOverLimit = computed(() => Math.max((typeCounter.value[newEndpointType.value] ?? 0) - maxStations, 1));
 
 function changeInitialEndpointType() {
-  if ((typeCounter.value.Spacestation ?? 0) + 1 > maxStations && isNewEndpoint.value) {
-    newEndpointType.value = 'SpacestationFixPosition';
-  } else {
-    newEndpointType.value = props.endpointData.TeleporterType;
-  }
+  newEndpointType.value =
+    (typeCounter.value.Spacestation ?? 0) + 1 > maxStations && isNewEndpoint.value
+      ? 'SpacestationFixPosition'
+      : props.endpointData.TeleporterType;
 }
 
 watch(typeCounter, changeInitialEndpointType);
