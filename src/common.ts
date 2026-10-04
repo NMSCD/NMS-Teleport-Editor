@@ -50,8 +50,8 @@ export function createEndpoint(
   };
 }
 
-// oxlint-disable-next-line new-cap
 const xyzToGlyphs = (voxelCoords: Readonly<VoxelCoordinates>): string =>
+  // oxlint-disable-next-line new-cap
   VoxelCoordinate(voxelCoords).toGlyph().value.code;
 
 export function endpointToGlyphs(endpoint: TeleportEndpoint) {
