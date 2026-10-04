@@ -14,10 +14,10 @@ export const teleporterTypesEnum = z.enum([
   'SpacestationFixPosition',
 ]);
 
-export const endpointSchema = z.object({
-  UniverseAddress: z.object({
+export const endpointSchema = z.looseObject({
+  UniverseAddress: z.looseObject({
     RealityIndex: z.int(),
-    GalacticAddress: z.object({
+    GalacticAddress: z.looseObject({
       VoxelX: z.int(),
       VoxelY: z.int(),
       VoxelZ: z.int(),
