@@ -31,6 +31,7 @@ const teleporterFilterTypes = ['', ...teleporterTypes];
       <select v-model="filterType">
         <option
           v-for="teleporterType in teleporterFilterTypes"
+          :key="teleporterType"
           :value="teleporterType"
         >
           {{ teleporterType }}

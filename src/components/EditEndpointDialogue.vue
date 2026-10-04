@@ -158,6 +158,7 @@ watch(typeCounter, changeInitialEndpointType);
           <select v-model="newEndpointType">
             <option
               v-for="endpointType in isNewEndpoint ? stationEndpoints : teleporterTypes"
+              :key="endpointType"
               :value="endpointType"
             >
               {{ endpointType }}
