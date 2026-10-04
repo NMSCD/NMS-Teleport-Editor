@@ -14,7 +14,7 @@ export const teleporterTypesEnum = z.enum([
   'SpacestationFixPosition',
 ]);
 
-export const endpointSchema = z.object({
+export const endpointSchema = z.looseObject({
   UniverseAddress: z.object({
     RealityIndex: z.int(),
     GalacticAddress: z.object({
