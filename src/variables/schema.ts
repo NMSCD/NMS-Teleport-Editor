@@ -15,9 +15,9 @@ export const teleporterTypesEnum = z.enum([
 ]);
 
 export const endpointSchema = z.looseObject({
-  UniverseAddress: z.object({
+  UniverseAddress: z.looseObject({
     RealityIndex: z.int(),
-    GalacticAddress: z.object({
+    GalacticAddress: z.looseObject({
       VoxelX: z.int(),
       VoxelY: z.int(),
       VoxelZ: z.int(),
