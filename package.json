@@ -18,7 +18,7 @@
     "@vueuse/core": "^15.0.0",
     "bulma": "^1.0.2",
     "pinia": "^4.0.3",
-    "vue-tsc": "^3.3.12",
+    "vue-tsc": "^3.3.13",
     "zod": "^4.6.5"
   },
   "devDependencies": {
