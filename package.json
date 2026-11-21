@@ -19,7 +19,7 @@
     "bulma": "^1.0.2",
     "pinia": "^4.1.0",
     "vue-tsc": "^3.3.13",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.6.4",
